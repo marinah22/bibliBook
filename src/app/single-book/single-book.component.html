@@ -1,0 +1,18 @@
+<div class="container py-5" *ngIf="book">
+    <h1 class="display-4 mb-0">
+        {{book.title}}
+    </h1>
+    <hr class="bg-dark mb-4 mt-2">
+    <div class="row">
+        <div class="col-md-6">
+            <h3 class="font-weight-normal">{{book.auteur}}</h3>
+            <h3 class="font-weight-normal">{{book.genre}}</h3>
+            <h3 class="font-weight-normal">{{book.isbn}}</h3>
+            <h3 class="font-weight-normal">Le livre a été publié le {{book.datePublication}}</h3>
+            <p class="card-text"><span>{{book.resume}}</span></p>
+            <h3 class="font-weight-normal text-danger" *ngIf="book.loc">Pas loué</h3>
+            <h3 class="font-weight-normal text-success" *ngIf="!book.loc">Loué</h3>
+            
+        </div>
+    </div>
+</div>

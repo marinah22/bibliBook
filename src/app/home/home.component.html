@@ -1,0 +1,30 @@
+<div class="container">
+    <h1 class="display-4 text-center">MES LIVRES</h1>
+    <div class="row mt-4">
+        <div class="col-sm-12 col-md-6 col-lg-4" *ngFor = "let books of books; let i = index ">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{books.title}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{books.auteur}}</h6>
+                    <p class="card-text"><span>{{books.resume}}</span></p>
+                    <p [ngStyle]="{color: getLocValue(i)}" class="text-right mr-3"  >
+                        <span *ngIf = "!books.loc" >Loué</span>
+                        <span *ngIf = "books.loc" >Pas loué</span> <br>
+                        
+                    </p>
+                    <div  >
+                        <button class="btn btn-primary mr-3" [routerLink]="['/book',i]"  >Voir ce livre</button>
+                        <button class="btn btn-primary ml-5" (click)="changeValue(i)" >Book</button> 
+                      
+                    
+                    </div>
+                  
+                </div>
+               
+            </div>
+        </div>
+       
+    </div>
+    
+</div>
+
