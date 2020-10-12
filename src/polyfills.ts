@@ -56,6 +56,7 @@
     import 'popper.js';
     import 'bootstrap';
     import 'firebase';
+    import 'underscore';
 
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.

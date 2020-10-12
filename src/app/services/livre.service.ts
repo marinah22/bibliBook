@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Book } from '../interfaces/book';
 import * as firebase from 'firebase';
+import { FilterAuteurPipe } from 'src/app/filter-auteur.pipe';
+
 
 
 
@@ -11,10 +13,10 @@ import * as firebase from 'firebase';
 export class LivreService {
 
   books : Book[] = [];
-  totalRecords : number;
-  page: number = 1
+  pipe : FilterAuteurPipe ;
 
-  booksSubject = new Subject<Book[]>();
+
+  booksSubject = new Subject<Book[]>();  
 
   
   constructor() { }
@@ -65,16 +67,44 @@ export class LivreService {
   }
 
   updateBook(book:Book,index){
-   /*  this.books[index] = book;
+    this.books[index] = book;
     this.saveBooks();
-    this.emitBooks(); */
-    firebase.database().ref('/books/'+index).update(book).catch(
+    this.emitBooks(); 
+   /*  firebase.database().ref('/books/'+index).update(book).catch(
       (error)=>{
         console.error(error);
+      }
+    ) */
+ 
+  }
+
+  uploadFile(file:File){
+    return new Promise(
+      (resolve,reject)=>{
+        const uniqueId = Date.now().toString();
+        const fileName = uniqueId + file.name;
+        const upload = firebase.storage().ref().child('images/books/'+ fileName).put(file);
+        upload.on(firebase.storage.TaskEvent.STATE_CHANGED,
+          ()=>{
+            console.log('chargement');
+          },
+          (error)=>{
+            console.log(error);
+          },
+          ()=>{
+            upload.snapshot.ref.getDownloadURL().then(
+              (downLoadUrl)=>{
+                resolve(downLoadUrl);
+              }
+            );
+
+          });
       }
     )
 
   }
+
+  
 
   
 }

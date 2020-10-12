@@ -4,8 +4,10 @@ export interface Book {
         genre:string;
         auteur:string;
         isbn: string;
-        resume: string;
-        datePublication?: string;
-        loc: boolean;
+        resume?: string;
+        date: string 
+        loc?: boolean;
+        photo?: string;
+
         
 }

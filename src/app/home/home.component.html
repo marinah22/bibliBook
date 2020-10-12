@@ -1,15 +1,22 @@
 <div class="container">
     <h1 class="display-4 text-center">MES LIVRES</h1>
-    <div class="row mt-4">
-        <div class="col-sm-12 col-md-6 col-lg-4" *ngFor = "let books of books; let i = index ">
+    <div class="row mt-4" >
+        <div class="col-sm-12 col-md-6 col-lg-4 page-content" *ngFor = "let books of books | paginate: {
+            itemsPerPage: pageSize,
+            currentPage: page,
+            totalItems: 0} ;  let i = index ">
+
+            
             <div class="card" style="width: 18rem;">
+               
+
                 <div class="card-body">
                     <h5 class="card-title">{{books.title}}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{books.auteur}}</h6>
                     <p class="card-text"><span>{{books.resume}}</span></p>
                     <p [ngStyle]="{color: getLocValue(i)}" class="text-right mr-3"  >
-                        <span *ngIf = "!books.loc" >Loué</span>
-                        <span *ngIf = "books.loc" >Pas loué</span> <br>
+                        <span  *ngIf = "!books.loc" >Loué</span>
+                        <span *ngIf = "books.loc" >Disponible</span> <br>
                         
                     </p>
                     <div  >
@@ -25,6 +32,18 @@
         </div>
        
     </div>
+    <hr class="mt-0 mb-5 bg-dark">
+    <div class="container text-center ">
+        <pagination-controls
+        previousLabel="Prev"
+        nextLabel="Next"
+        responsive="true"
+        (pageChange)="handlePageChange($event)"
+      ></pagination-controls>
+
+    </div>
+
+  
     
 </div>
 

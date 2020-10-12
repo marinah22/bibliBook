@@ -1,11 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup,  Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
 import { LivreService } from 'src/app/services/livre.service'
 import * as $ from 'jquery';
+import * as _ from 'underscore';
 import { Book } from 'src/app/interfaces/book';
+import { elementEventFullName } from '@angular/compiler/src/view_compiler/view_compiler';
+import { ElementArrayFinder } from 'protractor';
+//import { FilterAuteurPipe } from 'src/app/filter-auteur.pipe';
+
+
+
 
 @Component({
   selector: 'app-admin-books',
@@ -16,55 +23,81 @@ export class AdminBooksComponent implements OnInit {
 
   booksForm: FormGroup;
   booksSubscription: Subscription;
+  //pipe:FilterAuteurPipe;
   books: Book[] = [];
+  bookCount : number = 0;
+  countLoue : number = 0;
+  photoUploading = false;
+  photouploaded = false;
+  photoUrl: string;
+  date ='';
+  
+
+  
+  
 
   indexToRemove;
   indexToUpdate;
   editMode = false;
 
-  title = 'bibliBook';
+  searchName: string ='';
+  searchTitle: string ='';
   
-  totalRecords: number
-  page: number = 1
 
- 
   constructor(
     private formBuilder: FormBuilder,
     private booksService: LivreService,
-    private book: LivreService
-  ) {
-    this.books = new Array<any>()
+    //private pipeFilter : FilterAuteurPipe,
+    
+  ) {  
    }
 
   ngOnInit() {
     this.initBooksForm();
     this.booksService.booksSubject.subscribe(
       (data: Book[]) => {
-        this.books = data;
+        this.books = data;        
       }
+      
     );
+    
     this.booksService.getLivres();
+
+    
+
     this.booksService.emitBooks();
+    
+
+   
+
+    
   }
+
+   
+  
 
   initBooksForm() {
     this.booksForm = this.formBuilder.group(
       {
         title: ['', Validators.required],
-        genre: ['', Validators.required],
+        genre: [''],
         auteur: ['', Validators.required],
-        isbn: '',
-        resume: '',
-        datePublication: '',
-        loc:''
+        isbn: [''],
+        resume: [''],
+        date: ['', Validators.required],
+        loc:[''],
 
       }
+      
     )
+    
+   
   }
   onSubmitBooksForm() {
 
     const newBook: Book = this.booksForm.value;
     newBook.loc = this.booksForm.get('loc').value ? this.booksForm.get('loc').value : false;
+    newBook.photo = this.photoUrl ? this.photoUrl : '';
 
 
 
@@ -84,6 +117,7 @@ export class AdminBooksComponent implements OnInit {
   resetForm() {
     this.editMode= false;
     this.booksForm.reset();
+    this.photoUrl = '';
   }
 
   onDeleteBook(index) {
@@ -100,7 +134,7 @@ export class AdminBooksComponent implements OnInit {
 
   }
 
-  onEditBook(book: Book) {
+  onEditBook(book) {
 
     this.editMode=true;
     $('#booksFormModal').modal('show');
@@ -109,8 +143,9 @@ export class AdminBooksComponent implements OnInit {
     this.booksForm.get('auteur').setValue(book.auteur);
     this.booksForm.get('isbn').setValue(book.isbn);
     this.booksForm.get('resume').setValue(book.resume);
-    this.booksForm.get('datePublication').setValue(book.datePublication);
+    this.booksForm.get('date').setValue(book.date);
     this.booksForm.get('loc').setValue(book.loc);
+    this.photoUrl = book.photo ? book.photo : '';
     const index = this.books.findIndex(
       (bookEl) => {
         if (bookEl === book) {
@@ -118,12 +153,89 @@ export class AdminBooksComponent implements OnInit {
         }
       }
     );
+    console.log(index);
 
     this.indexToUpdate = index;
 
 
 
   }
+
+  onUploadFile(event){
+    this.photoUploading = true ;
+    //console.log(event);
+    this.booksService.uploadFile(event.target.files[0]).then(
+      (url:string)=>{
+        this.photoUrl = url;
+        this.photoUploading = false;
+        this.photouploaded = true;
+        setTimeout(
+          ()=>{
+            this.photouploaded =false;
+
+          },5000
+        );
+      }
+    )
+  }
+
+  show(){
+    
+     $("#show").css('display','block');
+     $("#showOne").css('display','none');
+
+      
+    
+   
+  }
+  showAll(){
+    $("#showOne").css('display','block');
+    $("#show").css('display','none');
+
+
+  }
+
+  count(){
+
+    
+    this.bookCount = this.books.length;
+  //console.log(this.books['loc'])
+  //console.log(_.size(this.books));
+   return this.bookCount;
+   
+   
+ }
+ IncountLoc(){
+  const newBook: Book = this.booksForm.value;
+ 
+
+ // console.log(this.booksService.books.find(ElementArrayFinder=>elementEventFullName ));
+
+    
+  
+}
+  //count = 0;
+  page = 1;
+  pageSize = 3;
+  pageSizes = [3, 6, 9];
+
+  handlePageChange(event) {
+    this.page = event;
+    this.booksService.getLivres();
+    this.booksService.emitBooks();
+  }
+
+  changeValue(index){
+    if(this.books[index].loc==true){
+      return this.books[index].loc = false ;
+    }else{
+      return this.books[index].loc = true ;
+
+    }
+  }
+
+
+ 
 
 
 }

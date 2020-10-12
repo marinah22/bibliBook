@@ -5,14 +5,19 @@
     <hr class="bg-dark mb-4 mt-2">
     <div class="row">
         <div class="col-md-6">
+            <div class="col-6">
+                <img *ngIf ="book.photo && book.photo !== ''" [src]="book.photo" alt="photo" class="w-100">
+              </div>
             <h3 class="font-weight-normal">{{book.auteur}}</h3>
             <h3 class="font-weight-normal">{{book.genre}}</h3>
             <h3 class="font-weight-normal">{{book.isbn}}</h3>
-            <h3 class="font-weight-normal">Le livre a été publié le {{book.datePublication}}</h3>
+            <h3 class="font-weight-normal">Le livre a été publié le {{book.date}}</h3>
             <p class="card-text"><span>{{book.resume}}</span></p>
-            <h3 class="font-weight-normal text-danger" *ngIf="book.loc">Pas loué</h3>
-            <h3 class="font-weight-normal text-success" *ngIf="!book.loc">Loué</h3>
+            <h3 class="font-weight-normal text-success" *ngIf="book.loc">Disponible</h3>
+            <h3 class="font-weight-normal text-danger" *ngIf="!book.loc">Loué</h3>
             
         </div>
+        
     </div>
+    <button class="btn btn-primary mr-3" [routerLink]="['/admin','dasboard']"  >Retour</button>
 </div>

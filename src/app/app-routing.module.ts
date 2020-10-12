@@ -4,9 +4,9 @@ import { AdminDasboardComponent } from './admin/admin-dasboard/admin-dasboard.co
 import { HomeComponent } from './home/home.component';
 import { SingleBookComponent } from './single-book/single-book.component';
 
-const routes: Routes = [
-  {path: 'home', component: HomeComponent},
+const routes: Routes = [  
   {path: 'admin/dasboard', component: AdminDasboardComponent},
+  {path: 'home', component: HomeComponent},
   {path: 'book/:id', component:SingleBookComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'home' }
